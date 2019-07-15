@@ -5,10 +5,20 @@ import Hamburger from 'react-native-hamburger';
 import If from '../If/If';
 import styles from './styles.js';
 import { NavigationContext } from '../Home-Page/Home-Page';
+import { AppStateContext } from '../Home-Page/Home-Page';
+
 
 const HamMenu = (props) => {
-  const context = useContext(NavigationContext);
+  const navigationContext = useContext(NavigationContext);
+  const appStateContext = useContext(AppStateContext);
   const [active, toggleActive] = useState(false);
+
+  const _handleLogout = (event) => {
+    event.preventDefault();
+    appStateContext.logout();
+    toggleActive(false);
+  }
+  
   return(
     <View style = { styles.hamburger }>
       <Hamburger 
@@ -18,12 +28,12 @@ const HamMenu = (props) => {
       />
       <If condition = { active }>
         <Text 
-          onPress = { () => context.navigate('History') } 
+          onPress = { () => navigationContext.navigate('History') } 
           style   = { styles.navLinks }> 
           History 
         </Text>
         <Text 
-          onPress = { () => {} } 
+          onPress = { (event) => _handleLogout(event) } 
           style   = { styles.navLinks }> 
           Logout 
         </Text>
