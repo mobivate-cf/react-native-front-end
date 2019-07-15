@@ -1,86 +1,26 @@
 import React from 'react';
-import { Text, KeyboardAvoidingView, Button, TextInput } from 'react-native';
-import { Linking } from 'expo';
-import * as WebBrowser from 'expo-web-browser';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import styles from './styles';
-import If from './component/If/If';
-import AppHeader from './component/App-header/App-header';
 import Header from './component/Header/Header';
+import History from './component/History/History';
+import HamMenu from './component/Ham-Menu/Ham-Menu';
+import HomePage from './component/Home-Page/Home-Page';
 
-// import * as Font from 'expo-font';
+const mainNavigator = createStackNavigator({
+  Header:   { screen: Header },
+  History:  { screen: History },
+  HamMenu:  { screen: HamMenu },
+  HomePage: { screen: HomePage },
+}, {
+  initialRouteName: 'HomePage',
+});
+
+const AppContainer = createAppContainer(mainNavigator);
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.state.isLoggedIn = false;
-    this.state.text = 'adsd';
-    this.state.redirectData = '';
-  }
-
-  // componentDidMount() {
-  //   Font.loadAsync({
-  //     'Montserrat': require('./assets/fonts/Montserrat.ttf'),
-  //   });
-  // }
-
-  _handleRedirect = (event) => {
-    WebBrowser.dismissBrowser();
-    let data = Linking.parse(event.url);
-    this.setState({
-      redirectData: data.queryParams.authToken,
-    });
-  };
-
-  login = async () => {
-    try {
-      this.setState({
-        text: Linking.makeUrl()
-      });
-      Linking.addEventListener('url', this._handleRedirect);
-
-      let result = await WebBrowser.openBrowserAsync(`https://mobby-backend.herokuapp.com/login/twitter`);
-
-      Linking.removeEventListener('url', this._handleRedirect);
-    } catch (error) {
-      alert(error);
-      console.error(error);
-    }
-  };
-
-  logout = () => {
-    if (this.state.isLoggedIn) {
-      this.setState({
-        isLoggedIn: false,
-        text: '',
-      });
-    }
-  };
-
-  render() {
-    return (
-      <>
-      <Header />
-      <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
-        <If condition={!this.state.isLoggedIn}>
-          <Button onPress={this.login} title='Login with Twitter' />
-          <Text>{this.state.text}</Text>
-        </If>
-        <If condition={this.state.isLoggedIn}>
-          <Text >Logged In!</Text>
-          <Text>{this.state.redirectData}</Text>
-          <TextInput
-            style={{height: 40, width: 90, borderColor: 'gray', borderWidth: 1}}
-            onChangeText={(text) => this.setState({text})}
-            value={this.state.text}
-          />
-          <Button onPress={this.logout} title='Logout'></Button>
-          <Text>{this.state.text}</Text>
-        </If>
-      </KeyboardAvoidingView>
-      </>
+  render(){
+    return(
+      <AppContainer />
     );
   }
-
 }
