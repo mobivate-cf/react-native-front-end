@@ -5,16 +5,15 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 40,
     textAlign: 'center',    
-    alignItems: 'center',
     justifyContent: 'center',
   },
   headerText: {
+    position: 'absolute',
+    top: -20,
+    left: '10%',
     color:'orange',
     fontSize: 50,
     fontWeight: '500',
-  },
-  headerButton: {
-    backgroundColor: 'pink',
   },
 });
 
