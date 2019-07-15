@@ -1,5 +1,7 @@
 import React from 'react';
 import { Text, KeyboardAvoidingView, Button, TextInput } from 'react-native';
+import { Linking } from 'expo';
+import * as WebBrowser from 'expo-web-browser';
 
 import styles from './styles';
 import If from './component/If/If';
@@ -13,7 +15,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {};
     this.state.isLoggedIn = false;
-    this.state.text = '';
+    this.state.text = 'adsd';
+    this.state.redirectData = '';
   }
 
   // componentDidMount() {
@@ -22,22 +25,38 @@ export default class App extends React.Component {
   //   });
   // }
 
-  login = () => {
-    if(!this.state.isLoggedIn) {
+  _handleRedirect = (event) => {
+    WebBrowser.dismissBrowser();
+    let data = Linking.parse(event.url);
+    this.setState({
+      redirectData: data.queryParams.authToken,
+    });
+  };
+
+  login = async () => {
+    try {
       this.setState({
-        isLoggedIn: true
+        text: Linking.makeUrl()
       });
+      Linking.addEventListener('url', this._handleRedirect);
+
+      let result = await WebBrowser.openBrowserAsync(`https://mobby-backend.herokuapp.com/login/twitter`);
+
+      Linking.removeEventListener('url', this._handleRedirect);
+    } catch (error) {
+      alert(error);
+      console.error(error);
     }
-  }
+  };
 
   logout = () => {
-    if(this.state.isLoggedIn) {
+    if (this.state.isLoggedIn) {
       this.setState({
         isLoggedIn: false,
         text: '',
       });
     }
-  }
+  };
 
   render() {
     return (
@@ -46,9 +65,11 @@ export default class App extends React.Component {
       <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
         <If condition={!this.state.isLoggedIn}>
           <Button onPress={this.login} title='Login with Twitter' />
+          <Text>{this.state.text}</Text>
         </If>
         <If condition={this.state.isLoggedIn}>
           <Text >Logged In!</Text>
+          <Text>{this.state.redirectData}</Text>
           <TextInput
             style={{height: 40, width: 90, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({text})}
