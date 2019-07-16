@@ -1,19 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
-}
+import Header from './component/Header/Header';
+import History from './component/History/History';
+import HamMenu from './component/Ham-Menu/Ham-Menu';
+import HomePage from './component/Home-Page/Home-Page';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const mainNavigator = createStackNavigator({
+  Header:   { screen: Header },
+  History:  { screen: History },
+  HamMenu:  { screen: HamMenu },
+  HomePage: { screen: HomePage },
+}, {
+  initialRouteName: 'HomePage',
 });
+
+const AppContainer = createAppContainer(mainNavigator);
+
+export default class App extends React.Component {
+  render(){
+    return(
+      <AppContainer />
+    );
+  }
+}
