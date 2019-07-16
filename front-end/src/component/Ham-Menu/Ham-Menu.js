@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native';
-import Hamburger from 'react-native-hamburger';
 import React, { useState, useContext } from 'react';
+import { Text, View } from 'react-native';
+import Hamburger from 'react-native-hamburger';
 
+import AppStateContext from '../../context/app-state-context';
 import If from '../If/If';
+import NavigationContext from '../../context/navigation-context';
 import styles from './styles';
-import { AppStateContext } from '../Home-Page/Home-Page';
-import { NavigationContext } from '../Home-Page/Home-Page';
 
 const HamMenu = (props) => {
   const navigationContext = useContext(NavigationContext);
@@ -19,7 +19,7 @@ const HamMenu = (props) => {
   }
   
   return(
-    <View style = { styles.hamburger }>
+    <View style = { styles.hamburgerContainer }>
       <Hamburger 
         active  = { active }  
         type    = "cross" 
