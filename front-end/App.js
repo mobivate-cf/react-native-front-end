@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import Header from './component/Header/Header';
-import History from './component/History/History';
-import HamMenu from './component/Ham-Menu/Ham-Menu';
-import HomePage from './component/Home-Page/Home-Page';
+import Header from './src/component/Header/Header';
+import History from './src/component/History/History';
+import HamMenu from './src/component/Ham-Menu/Ham-Menu';
+import HomePage from './src/component/Home-Page/Home-Page';
 
 const mainNavigator = createStackNavigator({
   Header:   { screen: Header },

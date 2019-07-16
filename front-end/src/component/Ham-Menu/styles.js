@@ -1,9 +1,13 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  hamburger: {
-    flex: 1,
+  hamburgerContainer: {
+    flex: 3,
     justifyContent: 'flex-start',
+    borderColor: 'pink',
+    borderWidth: 2,
+    height: 50,
+    width: '100%',
   },
   navLinks: {
     backgroundColor: 'pink',

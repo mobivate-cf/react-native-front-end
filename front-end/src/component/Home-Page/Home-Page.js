@@ -1,26 +1,26 @@
 import React from 'react';
 import { Linking } from 'expo';
-import { Constants } from 'expo';
+import Constants from 'expo-constants';
 import * as WebBrowser from 'expo-web-browser';
 import { KeyboardAvoidingView } from 'react-native';
 
 import styles from './styles';
 import Login from '../Login/Login';
 import Header from '../Header/Header';
-
-export const AppStateContext = React.createContext();
-export const NavigationContext = React.createContext();
+import AppStateContext from '../../context/app-state-context';
+import NavigationContext from '../../context/navigation-context';
 
 export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.state.isLoggedIn = false;
     this.state.text = '';
+    this.state.uri = 'test';
     this.state.redirectData = '';
+    this.state.isLoggedIn = false;
+
     this.state.logout = this.logout;
     this.state.login = this.login;
-    this.state.uri = 'test';
   }
 
   _handleRedirect = (event) => {
@@ -67,7 +67,7 @@ export default class HomePage extends React.Component {
         <NavigationContext.Provider value = { this.props.navigation }>
           <Header />
         </NavigationContext.Provider>
-        <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
+        <KeyboardAvoidingView style = { styles.container } behavior = 'padding' enabled>
           <Login />
         </KeyboardAvoidingView>
       </AppStateContext.Provider>

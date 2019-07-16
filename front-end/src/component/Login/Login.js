@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Text, Button } from 'react-native';
 
 import If from '../If/If';
-import { AppStateContext } from '../Home-Page/Home-Page';
+import AppStateContext from '../../context/app-state-context';
 
 const Login = (props) => {
   const appStateContext = useContext(AppStateContext);

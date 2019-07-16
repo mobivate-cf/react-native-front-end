@@ -4,8 +4,8 @@ import React, { useState, useContext } from 'react';
 
 import If from '../If/If';
 import styles from './styles';
-import { AppStateContext } from '../Home-Page/Home-Page';
-import { NavigationContext } from '../Home-Page/Home-Page';
+import AppStateContext from '../../context/app-state-context';
+import NavigationContext from '../../context/navigation-context';
 
 const HamMenu = (props) => {
   const navigationContext = useContext(NavigationContext);
@@ -19,7 +19,7 @@ const HamMenu = (props) => {
   }
   
   return(
-    <View style = { styles.hamburger }>
+    <View style = { styles.hamburgerContainer }>
       <Hamburger 
         active  = { active }  
         type    = "cross" 
