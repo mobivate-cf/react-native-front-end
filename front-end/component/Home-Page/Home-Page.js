@@ -25,7 +25,7 @@ export default class HomePage extends React.Component {
 
   _handleRedirect = (event) => {
     WebBrowser.dismissBrowser();
-    let data = Linking.parse(event.url);
+    const data = Linking.parse(event.url);
     this.setState({
       redirectData: data.queryParams.authToken,
       text: data.queryParams.display_name,
@@ -40,7 +40,7 @@ export default class HomePage extends React.Component {
       });
       Linking.addEventListener('url', this._handleRedirect);
 
-      let result = await WebBrowser.openBrowserAsync(`https://mobby-backend.herokuapp.com/login/twitter`);
+      const result = await WebBrowser.openBrowserAsync(`https://mobby-backend.herokuapp.com/login/twitter`);
 
       Linking.removeEventListener('url', this._handleRedirect);
     } catch (error) {
@@ -48,13 +48,6 @@ export default class HomePage extends React.Component {
       console.error(error);
     }
   };
-
-  // Right now we're using this dummy loggin for testing styles.
-  // login = () => {
-  //   this.setState({
-  //     isLoggedIn: true,
-  //   });
-  // }
 
   logout = () => {
     if (this.state.isLoggedIn) {
