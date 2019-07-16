@@ -2,25 +2,27 @@ import React, { useContext } from 'react';
 import { Text, Button } from 'react-native';
 
 import If from '../If/If';
+import Dashboard from '../Dashboard/Dashboard';
 import AppStateContext from '../../context/app-state-context';
 
 const Login = (props) => {
   const appStateContext = useContext(AppStateContext);
-  return(
+
+  if (appStateContext.user) {
+    return (
+      <>
+        <Text>Welcome, { appStateContext.user.display_name }!</Text>
+        <Dashboard />
+      </>
+    );
+  }
+
+  return (
     <>
-      <If condition = { !appStateContext.isLoggedIn }>
-        <Button 
-          onPress = { () => appStateContext.login() } 
-          title   = 'Login with Twitter' 
-        />
-        <Text>{ appStateContext.text }</Text>
-      </If>
-      <If condition = { appStateContext.isLoggedIn }>
-        <Text > Logged In!</Text>
-        <Text>{ appStateContext.redirectData }</Text>
-        <Text>{ appStateContext.text }</Text>
-        <Text>{ appStateContext.uri }</Text>
-      </If>
+      <Button 
+        onPress = { () => appStateContext.login() } 
+        title   = 'Login with Twitter'
+      />
     </>
   );
 }

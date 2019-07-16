@@ -12,6 +12,7 @@ const HamMenu = (props) => {
   const appStateContext = useContext(AppStateContext);
   const [active, toggleActive] = useState(false);
 
+  console.log('hammenu', NavigationContext);
   const _handleLogout = (event) => {
     event.preventDefault();
     appStateContext.logout();

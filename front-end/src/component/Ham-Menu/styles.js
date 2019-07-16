@@ -2,10 +2,8 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   hamburgerContainer: {
-    flex: 3,
+    flex: 1,
     justifyContent: 'flex-start',
-    borderColor: 'pink',
-    borderWidth: 2,
     height: 50,
     width: '100%',
   },

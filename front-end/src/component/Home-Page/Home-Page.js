@@ -1,9 +1,9 @@
 import React from 'react';
 import { Linking } from 'expo';
-import Constants from 'expo-constants';
 import * as WebBrowser from 'expo-web-browser';
 import { KeyboardAvoidingView } from 'react-native';
 
+import If from '../If/If';
 import styles from './styles';
 import Login from '../Login/Login';
 import Header from '../Header/Header';
@@ -14,11 +14,7 @@ export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.state.text = '';
-    this.state.uri = 'test';
-    this.state.redirectData = '';
-    this.state.isLoggedIn = false;
-
+    this.state.user = false;
     this.state.logout = this.logout;
     this.state.login = this.login;
   }
@@ -26,21 +22,20 @@ export default class HomePage extends React.Component {
   _handleRedirect = (event) => {
     WebBrowser.dismissBrowser();
     const data = Linking.parse(event.url);
-    this.setState({
-      redirectData: data.queryParams.authToken,
-      text: data.queryParams.display_name,
+    this.setState({ 
+      user: {
+        display_name: data.queryParams.display_name,
+        user_name: data.queryParams.user_name,
+        user_id: data.queryParams.id,
+      }
     });
   };
 
   login = async () => {
     try {
-      this.setState({
-        text: Linking.makeUrl(),
-        uri: Constants.linkingUri,
-      });
       Linking.addEventListener('url', this._handleRedirect);
 
-      const result = await WebBrowser.openBrowserAsync(`https://mobby-backend.herokuapp.com/login/twitter`);
+      await WebBrowser.openBrowserAsync(`https://mobby-backend.herokuapp.com/login/twitter`);
 
       Linking.removeEventListener('url', this._handleRedirect);
     } catch (error) {
@@ -50,11 +45,9 @@ export default class HomePage extends React.Component {
   };
 
   logout = () => {
-    if (this.state.isLoggedIn) {
+    if (this.state.display_name) {
       this.setState({
-        isLoggedIn: false,
-        redirectData: '',
-        text: '',
+        user: false,
       });
     }
   };
@@ -65,10 +58,13 @@ export default class HomePage extends React.Component {
       {/* For now we are sharing state - this is too broad and should be unique to the user */}
       <AppStateContext.Provider value = { this.state }>
         <NavigationContext.Provider value = { this.props.navigation }>
-          <Header />
+            <Header />
         </NavigationContext.Provider>
+
         <KeyboardAvoidingView style = { styles.container } behavior = 'padding' enabled>
-          <Login />
+          <If condition = {!this.state.user}>
+            <Login />
+          </If>
         </KeyboardAvoidingView>
       </AppStateContext.Provider>
       </>
