@@ -1,18 +1,17 @@
-import { View, Text } from 'react-native';
-import Hamburger from 'react-native-hamburger';
 import React, { useState, useContext } from 'react';
+import { Text, View } from 'react-native';
+import Hamburger from 'react-native-hamburger';
 
-import If from '../If/If';
-import styles from './styles';
 import AppStateContext from '../../context/app-state-context';
+import If from '../If/If';
 import NavigationContext from '../../context/navigation-context';
+import styles from './styles';
 
 const HamMenu = (props) => {
   const navigationContext = useContext(NavigationContext);
   const appStateContext = useContext(AppStateContext);
   const [active, toggleActive] = useState(false);
 
-  console.log('hammenu', NavigationContext);
   const _handleLogout = (event) => {
     event.preventDefault();
     appStateContext.logout();

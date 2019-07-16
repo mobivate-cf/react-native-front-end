@@ -15,6 +15,7 @@ const mainNavigator = createStackNavigator({
   HomePage: { screen: HomePage },
   Dashboard: { screen: Dashboard },
   CreateGoal: { screen: CreateGoal },
+  CreateGoalButton: { screen: CreateGoalButton },
 }, {
   initialRouteName: 'HomePage',
 });

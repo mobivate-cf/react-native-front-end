@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 
+import AppStateContext from '../../context/app-state-context';
 import CreateGoalButton from '../Create-Goal/Create-Goal-Button';
 import NavigationContext from '../../context/navigation-context';
 
 export default class Dashboard extends React.Component {
+  static contextType = AppStateContext;
   static navigationOptions = { title: 'Mobivate' };
   
   render() {
@@ -12,12 +14,11 @@ export default class Dashboard extends React.Component {
       <>
         <View>
           <Text>
-            TODO: Add goal data here
+            Welcome, { this.context.user }
+            {/* Welcome, dumby! */}
           </Text>
         </View>
-        <NavigationContext.Provider value = { this.props.navigation }>
-          <CreateGoalButton />
-        </NavigationContext.Provider>
+        <CreateGoalButton />
       </>
     );
   }

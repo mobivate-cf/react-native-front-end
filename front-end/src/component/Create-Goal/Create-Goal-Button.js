@@ -1,13 +1,13 @@
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { View, Text } from 'react-native';
 import React, { useContext } from 'react';
+import { Text, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import styles from './styles';
 import NavigationContext from '../../context/navigation-context';
+import styles from './styles';
 
 const CreateGoalButton = (props) => {
   const navigationContext = useContext(NavigationContext);
-  console.log(NavigationContext);
+
   return (
     <View style = { styles.buttonContainer }>
       <Text 
