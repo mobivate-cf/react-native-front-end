@@ -7,8 +7,17 @@
     "web": "expo start --web",
     "eject": "expo eject"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "dependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jest": "^22.8.0",
     "expo": "^33.0.0",
+    "expo-web-browser": "^5.0.3",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
