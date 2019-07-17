@@ -3,20 +3,23 @@ import { Text, Button } from 'react-native';
 
 import AppStateContext from '../../context/app-state-context';
 
-const Login = (props) => {
-  const appStateContext = useContext(AppStateContext);
+class Login extends React.Component {
+  static contextType = AppStateContext;
+  static navigationOptions = { header: null };
 
-  return (
-    <>
-      <Text>
-        { appStateContext.user || '7' }
-      </Text>
-      <Button 
-        onPress = { () => appStateContext.login() } 
-        title   = 'Login with Twitter'
-      />
-    </>
-  );
+  render() {
+    return (
+      <>
+        <Text>
+          { this.context.user || '7' }
+        </Text>
+        <Button 
+          onPress = { () => this.context.login() } 
+          title   = 'Login with Twitter'
+        />
+      </>
+    );
+  }
 }
 
 export default Login;

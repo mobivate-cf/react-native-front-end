@@ -7,6 +7,7 @@ import HomePage from './src/component/Home-Page/Home-Page';
 import Dashboard from './src/component/Dashboard/Dashboard';
 import CreateGoal from './src/component/Create-Goal/Create-Goal';
 import CreateGoalButton from './src/component/Create-Goal/Create-Goal-Button';
+import Login from './src/component/Login/Login';
 
 const mainNavigator = createStackNavigator({
   Header:   { screen: Header },
@@ -15,6 +16,7 @@ const mainNavigator = createStackNavigator({
   Dashboard: { screen: Dashboard },
   CreateGoal: { screen: CreateGoal },
   CreateGoalButton: { screen: CreateGoalButton },
+  Login: { screen: Login }
 }, {
   initialRouteName: 'HomePage',
 });

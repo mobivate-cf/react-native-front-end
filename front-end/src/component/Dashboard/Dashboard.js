@@ -14,10 +14,10 @@ export default class Dashboard extends React.Component {
       <>
         <View>
           <Text>
-            Welcome 1, { this.context.user }
+            Welcome, { this.props.navigation.getParam('user') }
           </Text>
         </View>
-        <SimplifiedGoalView goalId={34} goalName={'Read'} />
+        <SimplifiedGoalView goalId = { 34 } goalName = { 'Read' } />
         <CreateGoalButton />
       </>
     );
