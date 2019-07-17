@@ -1,29 +1,27 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
+import CreateGoal from './src/component/Create-Goal/Create-Goal';
+import Dashboard from './src/component/Dashboard/Dashboard';
 import Header from './src/component/Header/Header';
 import History from './src/component/History/History';
 import HomePage from './src/component/Home-Page/Home-Page';
-import Dashboard from './src/component/Dashboard/Dashboard';
-import CreateGoal from './src/component/Create-Goal/Create-Goal';
-import CreateGoalButton from './src/component/Create-Goal/Create-Goal-Button';
 
 const mainNavigator = createStackNavigator({
-  Header:   { screen: Header },
-  History:  { screen: History },
-  HomePage: { screen: HomePage },
-  Dashboard: { screen: Dashboard },
-  CreateGoal: { screen: CreateGoal },
-  CreateGoalButton: { screen: CreateGoalButton },
-}, {
-  initialRouteName: 'HomePage',
-  defaultNavigationOptions: {
-    headerStyle: {
-      backgroundColor: 'orange',
+    Header:   { screen: Header },
+    History:  { screen: History },
+    HomePage: { screen: HomePage },
+    Dashboard: { screen: Dashboard },
+    CreateGoal: { screen: CreateGoal },
+  }, {
+    initialRouteName: 'HomePage',
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: 'orange',
+      },
+      headerTitle: 'Mobivate',
     },
-    headerTitle: 'Mobivate',
-  },
-});
+  });
 
 const AppContainer = createAppContainer(mainNavigator);
 

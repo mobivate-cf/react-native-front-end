@@ -3,25 +3,34 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { KeyboardAvoidingView, Text, View } from 'react-native';
 import { Image } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import AppStateContext from '../../context/app-state-context';
 import If from '../If/If';
 import NavigationContext from '../../context/navigation-context';
 import styles from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
-
+const BACKEND_URL = `https://mobby-backend.herokuapp.com/login/twitter`;
 export default class HomePage extends React.Component {
   static navigationOptions = { header: null };
 
   constructor(props) {
     super(props);
     this.state = {};
+    // this.state.user = false;
     this.state.user = 'dummyUser'; // false initial
     this.state.display_name = 'dummyDisplay';
     this.state.user_id = '27';
 
     this.state.logout = this.logout;
+
+    if (this.state.user) {
+      props.navigation.navigate('Dashboard',{
+        user: this.state.user,
+        display_name: this.state.display_name,
+        user_id: this.state.user_id,
+      });
+    }
   }
 
   _handleRedirect = (event) => {
@@ -39,7 +48,7 @@ export default class HomePage extends React.Component {
     try {
       Linking.addEventListener('url', this._handleRedirect);
 
-      await WebBrowser.openBrowserAsync(`https://mobby-backend.herokuapp.com/login/twitter`);
+      await WebBrowser.openBrowserAsync(BACKEND_URL);
 
       Linking.removeEventListener('url', this._handleRedirect);
     } catch (error) {
@@ -65,26 +74,19 @@ export default class HomePage extends React.Component {
         <AppStateContext.Provider value = { this.state }>
           <NavigationContext.Provider value = { this.props.navigation }>
             <KeyboardAvoidingView style = { styles.keyboardContainer } behavior = 'padding' enabled>
+
               <If condition = { !this.state.user }>
                 <View style = { styles.loginContainer } >
-                  <View style = { styles.logoAndName }>
+                  <View style = { styles.centerHorizontally }>
                     <Image source = { require('../../../assets/icon.png') }/>
                     <Text style = { styles.appName } >Mobivate</Text>
                   </View>
                   
-                  <TouchableOpacity onPress = { () => this.login() }>
+                  <TouchableOpacity style = {styles.centerHorizontally} onPress = { () => this.login() }>
                     <Image source = { require('../../../assets/sign-in-with-twitter.png') }/>
                   </TouchableOpacity>
                 </View>
               </If>
-              
-              {/* If user is logged in, navigate to dashboard screen else don't do anything */}
-              { this.state.user ? this.props.navigation.navigate('Dashboard', {
-                  user: this.state.user,
-                  display_name: this.state.display_name,
-                  user_id: this.state.user_id,
-                }) : undefined } 
-
             </KeyboardAvoidingView>
           </NavigationContext.Provider>
         </AppStateContext.Provider>
