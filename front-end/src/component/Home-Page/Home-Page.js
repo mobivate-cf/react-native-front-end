@@ -5,7 +5,6 @@ import { KeyboardAvoidingView, Text, View } from 'react-native';
 import { Image } from 'react-native-elements';
 
 import AppStateContext from '../../context/app-state-context';
-import Dashboard from '../Dashboard/Dashboard';
 import If from '../If/If';
 import NavigationContext from '../../context/navigation-context';
 import styles from './styles';
@@ -18,9 +17,11 @@ export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.state.user = false;
+    this.state.user = 'dummyUser'; // false initial
+    this.state.display_name = 'dummyDisplay';
+    this.state.user_id = '27';
+
     this.state.logout = this.logout;
-    this.state.login = this.login;
   }
 
   _handleRedirect = (event) => {
@@ -66,7 +67,7 @@ export default class HomePage extends React.Component {
             <KeyboardAvoidingView style = { styles.keyboardContainer } behavior = 'padding' enabled>
               <If condition = { !this.state.user }>
                 <View style = { styles.loginContainer } >
-                  <View style = {styles.logoAndName}>
+                  <View style = { styles.logoAndName }>
                     <Image source = { require('../../../assets/icon.png') }/>
                     <Text style = { styles.appName } >Mobivate</Text>
                   </View>
@@ -77,21 +78,13 @@ export default class HomePage extends React.Component {
                 </View>
               </If>
               
+              {/* If user is logged in, navigate to dashboard screen else don't do anything */}
               { this.state.user ? this.props.navigation.navigate('Dashboard', {
                   user: this.state.user,
                   display_name: this.state.display_name,
                   user_id: this.state.user_id,
-                }) : undefined }
+                }) : undefined } 
 
-              {/* <If condition = { this.state.user }>
-
-                { this.props.navigation.navigate('Dashboard', {
-                  user: this.state.user,
-                  display_name: this.state.display_name,
-                  user_id: this.state.user_id,
-                }) }
-
-              </If> */}
             </KeyboardAvoidingView>
           </NavigationContext.Provider>
         </AppStateContext.Provider>

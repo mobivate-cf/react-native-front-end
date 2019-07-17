@@ -17,6 +17,12 @@ const mainNavigator = createStackNavigator({
   CreateGoalButton: { screen: CreateGoalButton },
 }, {
   initialRouteName: 'HomePage',
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: 'orange',
+    },
+    headerTitle: 'Mobivate',
+  },
 });
 
 const AppContainer = createAppContainer(mainNavigator);
