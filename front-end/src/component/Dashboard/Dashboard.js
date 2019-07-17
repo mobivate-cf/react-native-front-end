@@ -4,6 +4,8 @@ import { CheckBox, ListItem, TouchableScale } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
+
 export default class Dashboard extends React.Component {
   static navigationOptions = { headerTitle: 'Today', headerLeft: null, gesturesEnabled: false };
   
@@ -64,7 +66,7 @@ export default class Dashboard extends React.Component {
   }
 
   getUserGoals() {
-    const data = fetch('https://mobby-backend.herokuapp.com/goals', {
+    const data = fetch(FETCH_USER_GOALS_URL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
