@@ -3,7 +3,6 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import Header from './src/component/Header/Header';
 import History from './src/component/History/History';
-import HamMenu from './src/component/Ham-Menu/Ham-Menu';
 import HomePage from './src/component/Home-Page/Home-Page';
 import Dashboard from './src/component/Dashboard/Dashboard';
 import CreateGoal from './src/component/Create-Goal/Create-Goal';
