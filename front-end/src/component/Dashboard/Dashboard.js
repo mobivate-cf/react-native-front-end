@@ -66,11 +66,12 @@ export default class Dashboard extends React.Component {
   }
 
   getUserGoals() {
-    const data = fetch(FETCH_USER_GOALS_URL, {
+    return fetch(FETCH_USER_GOALS_URL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        // 'goal_user_id': this.userId,
       },
       body: JSON.stringify({
         goal_user_id: this.userId,
@@ -90,8 +91,7 @@ export default class Dashboard extends React.Component {
           <View zIndex = {-1}>
             <FlatList
               style = {{ width: '100%', height: '100%' }}
-              data = { this.state.userGoals }
-
+              data = { this.getUserGoals() }
               renderItem = { ({ item }) => <ListItem
                   Component = { TouchableScale }
                   title = { item.name }
