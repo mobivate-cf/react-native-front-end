@@ -8,7 +8,7 @@ const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
 
 export default class Dashboard extends React.Component {
   static navigationOptions = { headerTitle: 'Today', headerLeft: null, gesturesEnabled: false };
-  
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -21,7 +21,7 @@ export default class Dashboard extends React.Component {
         key: '1',
         name: 'Read a book',
         streak: 20,
-      }, 
+      },
       {
         key: '2',
         name: 'Walk Kali',
@@ -61,7 +61,7 @@ export default class Dashboard extends React.Component {
         key: '9',
         name: 'Call Ginger Ugly',
         streak: 10,
-      }
+      },
     ];
   }
 
@@ -77,52 +77,56 @@ export default class Dashboard extends React.Component {
         goal_user_id: 1149045194530017300,
       }),
     })
-    .then((result => {
-      console.log(result.json());
-      return result;
-    }))
-    .catch(console.error);
+      .then((result) => {
+        console.log(result.json());
+        return result;
+      })
+      .catch(console.error);
   }
 
   render() {
-    return(
+    return (
       <>
         <View>
-          <View zIndex = {-1}>
+          <View zIndex={-1}>
             <FlatList
-              style = {{ width: '100%', height: '100%' }}
-              data = { this.getUserGoals() }
-              renderItem = { ({ item }) => <ListItem
-                  Component = { TouchableScale }
-                  title = { item.name }
-                  titleStyle = {{ color: 'black', fontWeight: 'bold', fontSize: 20 }}
-                  subtitleStyle = {{ color: 'black' }}
-                  subtitle = { `Streak: ${ item.streak }` }
-                  rightTitle = { <CheckBox checked = { false } /> }
-                  />
-                }
-              />
+              style={{ width: '100%', height: '100%' }}
+              data={this.state.userGoals}
+              // data={this.getUserGoals()}
+              renderItem={({ item }) => (
+                <ListItem
+                  Component={TouchableScale}
+                  title={item.name}
+                  titleStyle={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}
+                  subtitleStyle={{ color: 'black' }}
+                  subtitle={`Streak: ${item.streak}`}
+                  rightTitle={<CheckBox checked={false} />}
+                />
+              )}
+            />
           </View>
 
-          <View 
-            style = {
-              {
-                position: 'absolute',
-                right: 0,
-                bottom: 0,
-              }
-            }
+          <View
+            style={{
+              position: 'absolute',
+              right: 0,
+              bottom: 0,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('CreateGoal');
+              }}
             >
-            <TouchableOpacity onPress = { () => { this.props.navigation.navigate('CreateGoal') }}>
-              <Icon 
-                name = 'plus-circle' 
-                size = {75}
-                color = 'orange'
-                style = {{
+              <Icon
+                name="plus-circle"
+                size={75}
+                color="orange"
+                style={{
                   marginRight: 35,
                   marginBottom: 50,
                 }}
-                />
+              />
             </TouchableOpacity>
           </View>
         </View>

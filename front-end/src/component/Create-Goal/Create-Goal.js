@@ -8,26 +8,26 @@ import styles from './styles';
 
 export default class CreateGoal extends React.Component {
   static navigationOptions = { headerTitle: 'Create New Goal', headerLeft: null };
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {};
     this.state.isStartDateTimePickerVisible = false;
   }
 
-  showStartDateTimePicker(){
+  showStartDateTimePicker() {
     alert('hello');
-    this.setState({ isStartDateTimePickerVisible: true, });
+    this.setState({ isStartDateTimePickerVisible: true });
   }
-  hideStartDateTimePicker(){
-    this.setState({ isStartDateTimePickerVisible: false, });
+  hideStartDateTimePicker() {
+    this.setState({ isStartDateTimePickerVisible: false });
   }
-  handleDatePicked = date => {
-    console.log("A date has been picked: ", date);
+  handleDatePicked = (date) => {
+    console.log('A date has been picked: ', date);
     this.hideStartDateTimePicker();
   };
 
   render() {
-    return(
+    return (
       <>
         <View>
           {/* <TextInput
@@ -38,20 +38,14 @@ export default class CreateGoal extends React.Component {
           /> */}
           <Button title="Show DatePicker" onPress={() => this.showStartDateTimePicker()} />
           <DateTimePicker
-          isVisible = {true} // { this.state.isDateTimePickerVisible }
-          onConfirm = { this.handleDatePicked }
-          onCancel = { this.hideStartDateTimePicker }
-        />
-
-          <TextInput
-            placeholder='End Date'
-            onChange = { (event) => this.setState({ goal_end: event.text }) }
+            isVisible={true} // { this.state.isDateTimePickerVisible }
+            onConfirm={this.handleDatePicked}
+            onCancel={this.hideStartDateTimePicker}
           />
 
-          <TextInput
-            placeholder='Frequency'
-            onChange = { (event) => this.setState({ goal_frequency: event.text }) }
-          />
+          <TextInput placeholder="End Date" onChange={(event) => this.setState({ goal_end: event.text })} />
+
+          <TextInput placeholder="Frequency" onChange={(event) => this.setState({ goal_frequency: event.text })} />
         </View>
       </>
     );

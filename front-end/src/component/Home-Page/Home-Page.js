@@ -11,21 +11,42 @@ import NavigationContext from '../../context/navigation-context';
 import styles from './styles';
 
 const BACKEND_URL = `https://mobby-backend.herokuapp.com/login/twitter`;
+
+/**
+ * Initial Page of app, displays login view
+ * @export
+ * @class HomePage
+ * @extends {React.Component}
+ */
 export default class HomePage extends React.Component {
   static navigationOptions = { header: null };
 
+  /**
+   *Creates an instance of HomePage.
+   * @param {*} props
+   * @memberof HomePage
+   */
   constructor(props) {
     super(props);
     this.state = {};
-    // this.state.user = false;
-    this.state.user = 'dummyUser'; // false initial
-    this.state.display_name = 'dummyDisplay';
-    this.state.user_id = '27';
+    this.state.user = false;
+    // this.state.user = 'dummyUser'; // false initial
+    // this.state.display_name = 'dummyDisplay';
+    // this.state.user_id = '27';
 
     this.state.logout = this.logout;
+    console.log(Linking.getInitialURL().then((url) => url));
+  }
 
+  /**
+   * Checks if user data is defined (user logged in) and redirects user out of login screen
+   * Runs when component is first loaded (added to tree)
+   *
+   * @memberof HomePage
+   */
+  componentDidMount() {
     if (this.state.user) {
-      props.navigation.navigate('Dashboard',{
+      this.props.navigation.navigate('Dashboard', {
         user: this.state.user,
         display_name: this.state.display_name,
         user_id: this.state.user_id,
@@ -33,23 +54,35 @@ export default class HomePage extends React.Component {
     }
   }
 
+  /**
+   *  Handles universal/deep links to the app. Currently only supported for iOS since expo
+   *  does not support android deep links.
+   * @param {Object} event redirect event
+   * @memberof HomePage
+   */
   _handleRedirect = (event) => {
+    // WebBrowser.dismissBrowser() is iOS only
     WebBrowser.dismissBrowser();
     const data = Linking.parse(event.url);
 
-    this.setState({ 
+    this.setState({
       user: data.queryParams.user_name,
       display_name: data.queryParams.display_name,
       user_id: data.queryParams.id,
     });
+    this.componentDidMount();
   };
 
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
   login = async () => {
     try {
+      // Deep Links not supported on android by Expo
       Linking.addEventListener('url', this._handleRedirect);
-
       await WebBrowser.openBrowserAsync(BACKEND_URL);
-
       Linking.removeEventListener('url', this._handleRedirect);
     } catch (error) {
       alert(error);
@@ -57,6 +90,11 @@ export default class HomePage extends React.Component {
     }
   };
 
+  /**
+   *
+   *
+   * @memberof HomePage
+   */
   logout = () => {
     if (this.state.display_name) {
       this.setState({
@@ -67,23 +105,28 @@ export default class HomePage extends React.Component {
     }
   };
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof HomePage
+   */
   render() {
     return (
       <>
         {/* For now we are sharing state - this is too broad and should be unique to the user */}
-        <AppStateContext.Provider value = { this.state }>
-          <NavigationContext.Provider value = { this.props.navigation }>
-            <KeyboardAvoidingView style = { styles.keyboardContainer } behavior = 'padding' enabled>
-
-              <If condition = { !this.state.user }>
-                <View style = { styles.loginContainer } >
-                  <View style = { styles.centerHorizontally }>
-                    <Image source = { require('../../../assets/icon.png') }/>
-                    <Text style = { styles.appName } >Mobivate</Text>
+        <AppStateContext.Provider value={this.state}>
+          <NavigationContext.Provider value={this.props.navigation}>
+            <KeyboardAvoidingView style={styles.keyboardContainer} behavior="padding" enabled>
+              <If condition={!this.state.user}>
+                <View style={styles.loginContainer}>
+                  <View style={styles.centerHorizontally}>
+                    <Image source={require('../../../assets/icon.png')} style={{ width: 200, height: 200 }} />
+                    <Text style={styles.appName}>Mobivate</Text>
                   </View>
-                  
-                  <TouchableOpacity style = {styles.centerHorizontally} onPress = { () => this.login() }>
-                    <Image source = { require('../../../assets/sign-in-with-twitter.png') }/>
+
+                  <TouchableOpacity style={styles.centerHorizontally} onPress={() => this.login()}>
+                    <Image source={require('../../../assets/sign-in-with-twitter.png')} />
                   </TouchableOpacity>
                 </View>
               </If>
