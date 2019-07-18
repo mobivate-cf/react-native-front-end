@@ -6,9 +6,26 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
 
+/**
+ * React Component for Homepage of app
+ *
+ * Displays user goals, add goal button.
+ *
+ * @export
+ * @class Dashboard
+ * @extends {React.Component}
+ */
 export default class Dashboard extends React.Component {
   static navigationOptions = { headerTitle: 'Today', headerLeft: null, gesturesEnabled: false };
-  
+
+  /**
+   * Creates an instance of Dashboard.
+   *
+   * Sets user data from data passed by react navigation and default "goals"
+   *
+   * @param {*} props
+   * @memberof Dashboard
+   */
   constructor(props) {
     super(props);
     this.state = {};
@@ -18,111 +35,112 @@ export default class Dashboard extends React.Component {
 
     this.state.userGoals = [
       {
-        key: '1',
-        name: 'Read a book',
-        streak: 20,
-      }, 
-      {
-        key: '2',
-        name: 'Walk Kali',
-        streak: 30,
+        key: 'add',
+        goal_name: 'loading...',
+        streak: 0,
       },
-      {
-        key: '3',
-        name: 'Tell Jag about Jagged Array',
-        streak: '♾',
-      },
-      {
-        key: '4',
-        name: 'Call Becky Rebecky',
-        streak: 30,
-      },
-      {
-        key: '5',
-        name: 'Put beans in fridge',
-        streak: 2,
-      },
-      {
-        key: '6',
-        name: 'Pray to papa',
-        streak: 30,
-      },
-      {
-        key: '7',
-        name: 'Work on interview prep course',
-        streak: 2,
-      },
-      {
-        key: '8',
-        name: 'Suggest book to someone',
-        streak: 30,
-      },
-      {
-        key: '9',
-        name: 'Call Ginger Ugly',
-        streak: 10,
-      }
     ];
   }
 
-  getUserGoals() {
-    return fetch(FETCH_USER_GOALS_URL, {
+  /**
+   *  Gets run when the component is loaded in
+   *
+   * @memberof Dashboard
+   */
+  componentDidMount() {
+    this.getUserGoals();
+  }
+
+  /**
+   *  Gets user's goals from backend.
+   *
+   *  If backend has no goals for user, sets a 'add goal' goal
+   *
+   * @returns {Array} array of objects, each being a goal
+   * @memberof Dashboard
+   */
+  async getUserGoals() {
+    let goals = await fetch(FETCH_USER_GOALS_URL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        // 'goal_user_id': this.userId,
       },
       body: JSON.stringify({
         goal_user_id: 1149045194530017300,
       }),
-    })
-    .then((result => {
-      console.log(result.json());
-      return result;
-    }))
-    .catch(console.error);
+    });
+
+    goals = await goals.json();
+
+    goals.map((element, idx) => {
+      element.key = `${element.goal_id}`;
+      element.completed = false;
+      this.state.userGoals[idx] = element;
+      return element;
+    });
+    this.forceUpdate();
   }
 
+  /**
+   * Updates checked status of goal
+   *
+   * @param {Object} goal
+   * @memberof Dashboard
+   */
+  handleChecked(goal) {
+    goal.completed = !goal.completed;
+    this.forceUpdate();
+  }
+
+  /**
+   *  Renders screen for dashboard, list of user goals and add button
+   *
+   * @returns React Component
+   * @memberof Dashboard
+   */
   render() {
-    return(
+    return (
       <>
-        <View>
-          <View zIndex = {-1}>
+        <View style={{ width: '90%', height: '100%', marginLeft: '7%' }}>
+          <View zIndex={-1}>
             <FlatList
-              style = {{ width: '100%', height: '100%' }}
-              data = { this.getUserGoals() }
-              renderItem = { ({ item }) => <ListItem
-                  Component = { TouchableScale }
-                  title = { item.name }
-                  titleStyle = {{ color: 'black', fontWeight: 'bold', fontSize: 20 }}
-                  subtitleStyle = {{ color: 'black' }}
-                  subtitle = { `Streak: ${ item.streak }` }
-                  rightTitle = { <CheckBox checked = { false } /> }
-                  />
-                }
-              />
+              style={{ width: '100%', height: '100%' }}
+              data={this.state.userGoals}
+              renderItem={({ item }) => (
+                <ListItem
+                  Component={TouchableScale}
+                  title={item.goal_name}
+                  titleStyle={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}
+                  subtitleStyle={{ color: 'black' }}
+                  subtitle={item.streak ? `Streak: ${item.streak}` : 'give it a sec'}
+                  rightTitle={<CheckBox checked={item.completed} onPress={() => this.handleChecked(item)} />}
+                />
+              )}
+            />
           </View>
 
-          <View 
-            style = {
-              {
-                position: 'absolute',
-                right: 0,
-                bottom: 0,
-              }
-            }
+          <View
+            style={{
+              position: 'absolute',
+              right: 0,
+              bottom: 0,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate('CreateGoal');
+              }}
             >
-            <TouchableOpacity onPress = { () => { this.props.navigation.navigate('CreateGoal') }}>
-              <Icon 
-                name = 'plus-circle' 
-                size = {75}
-                color = 'orange'
-                style = {{
-                  marginRight: 35,
+              <Icon
+                name="plus-circle"
+                size={75}
+                color="orange"
+                style={{
+                  marginRight: 15,
                   marginBottom: 50,
                 }}
-                />
+              />
             </TouchableOpacity>
           </View>
         </View>
