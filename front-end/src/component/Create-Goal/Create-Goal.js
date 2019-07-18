@@ -26,6 +26,7 @@ export default class CreateGoal extends React.Component {
     super(props);
     this.state = {};
     this.state.isStartDateTimePickerVisible = false;
+    this.state.isEndDateTimePickerVisible = false;
   }
 
   /**
@@ -39,7 +40,17 @@ export default class CreateGoal extends React.Component {
   };
 
   /**
-   *  Hides date picker for end date of goal
+   *  Shows date picker for end date of goal
+   *
+   * @memberof CreateGoal
+   */
+  showEndDateTimePicker = () => {
+    // alert('hello');
+    this.setState({ isEndDateTimePickerVisible: true });
+  };
+
+  /**
+   *  Hides date picker for start date of goal
    *
    * @memberof CreateGoal
    */
@@ -48,13 +59,30 @@ export default class CreateGoal extends React.Component {
   };
 
   /**
+   *  Hides date picker for end date of goal
+   *
+   * @memberof CreateGoal
+   */
+  hideEndDateTimePicker = () => {
+    this.setState({ isEndDateTimePickerVisible: false });
+  };
+
+  /**
    *  Sets date for start date of goal
    *
    * @memberof CreateGoal
    */
   handleStartDatePicked = (date) => {
-    console.log('A date has been picked: ', date);
     this.hideStartDateTimePicker();
+  };
+
+  /**
+   *  Sets date for end date of goal
+   *
+   * @memberof CreateGoal
+   */
+  handleEndDatePicked = (date) => {
+    this.hideEndDateTimePicker();
   };
 
   render() {
@@ -69,6 +97,13 @@ export default class CreateGoal extends React.Component {
             isVisible={this.state.isStartDateTimePickerVisible}
             onConfirm={this.handleStartDatePicked}
             onCancel={this.hideStartDateTimePicker}
+          />
+
+          <Button title="End Date (Optional)" onPress={this.showEndDateTimePicker} style={{ width: '60%' }} />
+          <DateTimePicker
+            isVisible={this.state.isEndDateTimePickerVisible}
+            onConfirm={this.handleEndDatePicked}
+            onCancel={this.hideEndDateTimePicker}
           />
 
           {/* <TextInput placeholder="End Date" onChange={(event) => this.setState({ goal_end: event.text })} />

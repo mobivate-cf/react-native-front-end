@@ -31,10 +31,10 @@ export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    // this.state.user = false;
-    this.state.user = 'dummyUser'; // false initial
-    this.state.display_name = 'dummyDisplay';
-    this.state.user_id = '27';
+    this.state.user = false;
+    // this.state.user = 'dummyUser'; // false initial
+    // this.state.display_name = 'dummyDisplay';
+    // this.state.user_id = '27';
 
     this.state.logout = this.logout;
   }

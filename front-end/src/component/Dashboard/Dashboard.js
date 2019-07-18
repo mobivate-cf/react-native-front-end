@@ -32,6 +32,7 @@ export default class Dashboard extends React.Component {
     this.userId = props.navigation.getParam('user_id');
     this.userName = props.navigation.getParam('user');
     this.displayName = props.navigation.getParam('display_name');
+    this.isRefreshing = false;
 
     this.state.userGoals = [
       {
@@ -79,6 +80,11 @@ export default class Dashboard extends React.Component {
       this.state.userGoals[idx] = element;
       return element;
     });
+
+    if (goals.length === 0) {
+      this.state.userGoals[0].goal_name = 'Add a goal!';
+    }
+
     this.forceUpdate();
   }
 
@@ -93,6 +99,12 @@ export default class Dashboard extends React.Component {
     this.forceUpdate();
   }
 
+  refreshList = () => {
+    this.isRefreshing = true;
+    this.getUserGoals();
+    this.isRefreshing = false;
+  };
+
   /**
    *  Renders screen for dashboard, list of user goals and add button
    *
@@ -105,6 +117,8 @@ export default class Dashboard extends React.Component {
         <View style={{ width: '90%', height: '100%', marginLeft: '7%' }}>
           <View zIndex={-1}>
             <FlatList
+              onRefresh={this.refreshList}
+              refreshing={this.isRefreshing}
               style={{ width: '100%', height: '100%' }}
               data={this.state.userGoals}
               renderItem={({ item }) => (
