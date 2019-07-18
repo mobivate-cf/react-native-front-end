@@ -46,11 +46,3 @@ describe('Home Page', () => {
     });
   });
 });
-
-/*
-      props.navigation.navigate('Dashboard',{
-        user: this.state.user,
-        display_name: this.state.display_name,
-        user_id: this.state.user_id,
-      });
-*/

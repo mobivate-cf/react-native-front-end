@@ -159,7 +159,7 @@ exports[`Home Page Rendering Should follow snapshot 1`] = `
         >
           <View>
             <RCTDatePicker
-              date={1563426397646}
+              date={1563474976163}
               minuteInterval={1}
               mode="date"
               onChange={[Function]}

@@ -11,6 +11,7 @@ import NavigationContext from '../../context/navigation-context';
 import styles from './styles';
 
 const BACKEND_URL = `https://mobby-backend.herokuapp.com/login/twitter`;
+
 export default class HomePage extends React.Component {
   static navigationOptions = { header: null };
 
