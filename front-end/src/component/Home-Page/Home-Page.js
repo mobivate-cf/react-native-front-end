@@ -76,13 +76,13 @@ export default class HomePage extends React.Component {
             <KeyboardAvoidingView style = { styles.keyboardContainer } behavior = 'padding' enabled>
 
               <If condition = { !this.state.user }>
-                <View style = { styles.loginContainer } >
+                <View style = { styles.loginContainer }>
                   <View style = { styles.centerHorizontally }>
                     <Image source = { require('../../../assets/icon.png') }/>
-                    <Text style = { styles.appName } >Mobivate</Text>
+                    <Text style = { styles.appName }>Mobivate</Text>
                   </View>
                   
-                  <TouchableOpacity style = {styles.centerHorizontally} onPress = { () => this.login() }>
+                  <TouchableOpacity style = { styles.centerHorizontally } onPress = { () => this.login() }>
                     <Image source = { require('../../../assets/sign-in-with-twitter.png') }/>
                   </TouchableOpacity>
                 </View>
