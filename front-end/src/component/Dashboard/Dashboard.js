@@ -74,11 +74,11 @@ export default class Dashboard extends React.Component {
         // 'goal_user_id': this.userId,
       },
       body: JSON.stringify({
-        goal_user_id: this.userId,
+        goal_user_id: 1149045194530017300,
       }),
     })
     .then((result => {
-      console.log(result);
+      console.log(result.json());
       return result;
     }))
     .catch(console.error);
