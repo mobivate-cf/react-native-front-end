@@ -5,6 +5,7 @@ import CreateGoal from './src/component/Create-Goal/Create-Goal';
 import Dashboard from './src/component/Dashboard/Dashboard';
 import HomePage from './src/component/Home-Page/Home-Page';
 
+
 // entry point component for our app
 const AppContainer = createAppContainer(
   createStackNavigator(
