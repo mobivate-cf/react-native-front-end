@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Keyboard, View, Text, TextInput } from 'react-native';
-import { TouchableOpacity } from 'react-native-elements';
+import { Keyboard, View, TextInput } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -61,13 +61,10 @@ export default class CreateGoal extends React.Component {
     return (
       <>
         <View>
-          <TextInput
-            placeholder="Name"
-            onChange={(event) => this.setState({ goal_name: event.text })}
-            maxLength={30}
-            onBlur={Keyboard.dismiss}
-          />
-          <Button title="Show DatePicker" onPress={this.showStartDateTimePicker} />
+          <Input label="Name" placeholder="Give your goal a name" />
+          <Input label="Add Friends" placeholder="Add your twitter friends to the goal" />
+
+          <Button title="Start Date" onPress={this.showStartDateTimePicker} style={{ width: '60%' }} />
           <DateTimePicker
             isVisible={this.state.isStartDateTimePickerVisible}
             onConfirm={this.handleStartDatePicked}
