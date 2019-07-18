@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logoAndName: {
+  centerHorizontally: {
     alignItems: 'center',
   },
   loginContainer: {
