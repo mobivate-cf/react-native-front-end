@@ -1,9 +1,8 @@
 import { Linking } from 'expo';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { KeyboardAvoidingView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
 import { Image } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // ----------------------------------------------------------------------------
 
@@ -32,9 +31,6 @@ export default class HomePage extends React.Component {
     super(props);
     this.state = {};
     this.state.user = false;
-    // this.state.user = 'dummyUser'; // false initial
-    // this.state.display_name = 'dummyDisplay';
-    // this.state.user_id = '27';
 
     this.state.logout = this.logout;
   }

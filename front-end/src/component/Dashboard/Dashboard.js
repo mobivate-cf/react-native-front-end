@@ -1,7 +1,6 @@
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import { CheckBox, ListItem, TouchableScale } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
@@ -68,7 +67,7 @@ export default class Dashboard extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        goal_user_id: 1149045194530017300,
+        goal_user_id: this.userId,
       }),
     });
 
@@ -104,6 +103,12 @@ export default class Dashboard extends React.Component {
     this.getUserGoals();
     this.isRefreshing = false;
   };
+
+  addGoal() {
+    this.props.navigation.navigate('CreateGoal', {
+      user_id: this.props.navigation.getParam('user_id'),
+    });
+  }
 
   /**
    *  Renders screen for dashboard, list of user goals and add button
@@ -141,11 +146,7 @@ export default class Dashboard extends React.Component {
               bottom: 0,
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate('CreateGoal');
-              }}
-            >
+            <TouchableOpacity onPress={() => this.addGoal()}>
               <Icon
                 name="plus-circle"
                 size={75}

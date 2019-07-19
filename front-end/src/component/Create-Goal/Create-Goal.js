@@ -1,10 +1,9 @@
 import React from 'react';
-import { Keyboard, View, TextInput } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-import styles from './styles';
+const FETCH_CREATE_GOAL_URL = 'https://mobby-backend.herokuapp.com/createGoal';
 
 /**
  *  React Component for add goal screen
@@ -24,9 +23,14 @@ export default class CreateGoal extends React.Component {
    */
   constructor(props) {
     super(props);
+    this.userId = props.navigation.getParam('user_id');
+
     this.state = {};
     this.state.isStartDateTimePickerVisible = false;
     this.state.isEndDateTimePickerVisible = false;
+    this.state.startDate = Date.now();
+    this.state.endDate = Date.now() * 2;
+    this.state.goal_name;
   }
 
   /**
@@ -35,7 +39,6 @@ export default class CreateGoal extends React.Component {
    * @memberof CreateGoal
    */
   showStartDateTimePicker = () => {
-    // alert('hello');
     this.setState({ isStartDateTimePickerVisible: true });
   };
 
@@ -45,7 +48,6 @@ export default class CreateGoal extends React.Component {
    * @memberof CreateGoal
    */
   showEndDateTimePicker = () => {
-    // alert('hello');
     this.setState({ isEndDateTimePickerVisible: true });
   };
 
@@ -85,30 +87,66 @@ export default class CreateGoal extends React.Component {
     this.hideEndDateTimePicker();
   };
 
+  makeGoal = async () => {
+    let createdGoal = await fetch(FETCH_CREATE_GOAL_URL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goal_user_id: this.userId,
+        goal_name: this.state.goal_name,
+        goal_start_date: this.state.startDate,
+        goal_end_date: this.state.endDate,
+        frequency: 'daily',
+      }),
+    });
+
+    this.props.navigation.navigate('Dashboard');
+  };
+
   render() {
     return (
       <>
-        <View>
-          <Input label="Name" placeholder="Give your goal a name" />
-          <Input label="Add Friends" placeholder="Add your twitter friends to the goal" />
+        <View
+          style={{
+            width: '90%',
+            height: '80%',
+            marginLeft: '5%',
+            marginTop: '40%',
+          }}
+        >
+          <TextInput
+            label="Name"
+            onChangeText={(name) => this.setState({ goal_name: name })}
+            placeholder="Give your goal a name"
+          />
+          {/* <Input style={{ marginTop: '10%' }} label="Add Friends" placeholder="Add your twitter friends to the goal" /> */}
 
-          <Button title="Start Date" onPress={this.showStartDateTimePicker} style={{ width: '60%' }} />
+          <Button
+            title="Start Date"
+            onPress={this.showStartDateTimePicker}
+            style={{ width: '90%', marginLeft: '5%', marginTop: '5%' }}
+          />
           <DateTimePicker
             isVisible={this.state.isStartDateTimePickerVisible}
             onConfirm={this.handleStartDatePicked}
             onCancel={this.hideStartDateTimePicker}
           />
 
-          <Button title="End Date (Optional)" onPress={this.showEndDateTimePicker} style={{ width: '60%' }} />
+          <Button
+            title="End Date (Optional)"
+            onPress={this.showEndDateTimePicker}
+            style={{ width: '90%', marginLeft: '5%', marginTop: '5%' }}
+          />
           <DateTimePicker
             isVisible={this.state.isEndDateTimePickerVisible}
             onConfirm={this.handleEndDatePicked}
             onCancel={this.hideEndDateTimePicker}
           />
 
-          {/* <TextInput placeholder="End Date" onChange={(event) => this.setState({ goal_end: event.text })} />
-
-          <TextInput placeholder="Frequency" onChange={(event) => this.setState({ goal_frequency: event.text })} /> */}
+          <Button title="Submit" style={{ marginTop: '40%' }} onPress={this.makeGoal} />
         </View>
       </>
     );
