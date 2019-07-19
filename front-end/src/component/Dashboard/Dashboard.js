@@ -4,7 +4,7 @@ import { CheckBox, ListItem, TouchableScale } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
-
+const FETCH_DELETE_GOAL_URL = 'https://mobby-backend.herokuapp.com/deleteGoal';
 /**
  * React Component for Homepage of app
  *
@@ -96,6 +96,18 @@ export default class Dashboard extends React.Component {
   handleChecked(checkedGoal) {
     checkedGoal.completed = !checkedGoal.completed;
     this.forceUpdate();
+
+    fetch(FETCH_DELETE_GOAL_URL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goal_id: checkedGoal.goal_id,
+        goal_user_id: this.props.navigation.getParam('user_id'),
+      }),
+    });
 
     setTimeout(
       function() {
