@@ -3,6 +3,8 @@ import { FlatList, TouchableOpacity, View } from 'react-native';
 import { CheckBox, ListItem, TouchableScale } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import If from '../If/If';
+
 const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
 const FETCH_DELETE_GOAL_URL = 'https://mobby-backend.herokuapp.com/deleteGoal';
 /**
@@ -15,7 +17,10 @@ const FETCH_DELETE_GOAL_URL = 'https://mobby-backend.herokuapp.com/deleteGoal';
  * @extends {React.Component}
  */
 export default class Dashboard extends React.Component {
-  static navigationOptions = { headerTitle: 'Today', headerLeft: null, gesturesEnabled: false };
+  static navigationOptions = {
+    headerTitle: 'Today',
+    headerLeft: null,
+  };
 
   /**
    * Creates an instance of Dashboard.
@@ -36,7 +41,7 @@ export default class Dashboard extends React.Component {
     this.state.userGoals = [
       {
         key: 'add',
-        goal_name: 'loading...',
+        goal_name: 'Loading...',
         streak: 0,
       },
     ];
@@ -81,7 +86,13 @@ export default class Dashboard extends React.Component {
     });
 
     if (goals.length === 0) {
-      this.state.userGoals[0].goal_name = 'Add a goal!';
+      this.state.userGoals = [
+        {
+          key: 'add',
+          goal_name: 'Add a goal!',
+          streak: 0,
+        },
+      ];
     }
 
     this.forceUpdate();
@@ -94,28 +105,30 @@ export default class Dashboard extends React.Component {
    * @memberof Dashboard
    */
   handleChecked(checkedGoal) {
-    checkedGoal.completed = !checkedGoal.completed;
-    this.forceUpdate();
+    if (checkedGoal.key !== 'add') {
+      checkedGoal.completed = !checkedGoal.completed;
+      this.forceUpdate();
 
-    fetch(FETCH_DELETE_GOAL_URL, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        goal_id: checkedGoal.goal_id,
-        goal_user_id: this.props.navigation.getParam('user_id'),
-      }),
-    });
+      fetch(FETCH_DELETE_GOAL_URL, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          goal_id: checkedGoal.goal_id,
+          goal_user_id: this.props.navigation.getParam('user_id'),
+        }),
+      });
 
-    setTimeout(
-      function() {
-        this.state.userGoals = this.state.userGoals.filter((goal) => !goal.completed);
-        this.forceUpdate();
-      }.bind(this),
-      800
-    );
+      setTimeout(
+        function() {
+          this.state.userGoals = this.state.userGoals.filter((goal) => !goal.completed) || [];
+          this.forceUpdate();
+        }.bind(this),
+        800
+      );
+    }
   }
 
   refreshList = () => {
@@ -152,7 +165,7 @@ export default class Dashboard extends React.Component {
                   title={item.goal_name}
                   titleStyle={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}
                   subtitleStyle={{ color: 'black' }}
-                  subtitle={item.streak ? `Streak: ${item.streak}` : 'give it a sec'}
+                  // subtitle={item.streak ? `Streak: ${item.streak}` : 'waiting...'}
                   rightTitle={<CheckBox checked={item.completed} onPress={() => this.handleChecked(item)} />}
                 />
               )}

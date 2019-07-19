@@ -47,6 +47,7 @@ export default class HomePage extends React.Component {
         user: this.state.user,
         display_name: this.state.display_name,
         user_id: this.state.user_id,
+        logout: this.state.logout,
       });
     }
   }
@@ -67,6 +68,7 @@ export default class HomePage extends React.Component {
       display_name: data.queryParams.display_name,
       user_id: data.queryParams.id,
     });
+
     this.componentDidMount();
   };
 
