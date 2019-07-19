@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 const FETCH_CREATE_GOAL_URL = 'https://mobby-backend.herokuapp.com/createGoal';
@@ -26,11 +26,12 @@ export default class CreateGoal extends React.Component {
     this.userId = props.navigation.getParam('user_id');
 
     this.state = {};
+    this.state.goal_name;
     this.state.isStartDateTimePickerVisible = false;
     this.state.isEndDateTimePickerVisible = false;
     this.state.startDate = Date.now();
     this.state.endDate = Date.now() * 2;
-    this.state.goal_name;
+    this.state.frequency = 'daily';
   }
 
   /**
@@ -75,6 +76,7 @@ export default class CreateGoal extends React.Component {
    * @memberof CreateGoal
    */
   handleStartDatePicked = (date) => {
+    this.setState({ startDate: date.getTime() });
     this.hideStartDateTimePicker();
   };
 
@@ -84,11 +86,16 @@ export default class CreateGoal extends React.Component {
    * @memberof CreateGoal
    */
   handleEndDatePicked = (date) => {
+    this.setState({ endDate: date.getTime() });
     this.hideEndDateTimePicker();
   };
 
   makeGoal = async () => {
-    let createdGoal = await fetch(FETCH_CREATE_GOAL_URL, {
+    if (!this.state.goal_name) {
+      return;
+    }
+
+    await fetch(FETCH_CREATE_GOAL_URL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -99,7 +106,7 @@ export default class CreateGoal extends React.Component {
         goal_name: this.state.goal_name,
         goal_start_date: this.state.startDate,
         goal_end_date: this.state.endDate,
-        frequency: 'daily',
+        frequency: this.state.frequency,
       }),
     });
 
@@ -118,11 +125,14 @@ export default class CreateGoal extends React.Component {
           }}
         >
           <TextInput
-            label="Name"
+            style={{
+              height: 40,
+              paddingLeft: 6,
+              fontSize: 25,
+            }}
             onChangeText={(name) => this.setState({ goal_name: name })}
             placeholder="Give your goal a name"
           />
-          {/* <Input style={{ marginTop: '10%' }} label="Add Friends" placeholder="Add your twitter friends to the goal" /> */}
 
           <Button
             title="Start Date"
@@ -136,7 +146,8 @@ export default class CreateGoal extends React.Component {
           />
 
           <Button
-            title="End Date (Optional)"
+            title="End Date"
+            color="orange"
             onPress={this.showEndDateTimePicker}
             style={{ width: '90%', marginLeft: '5%', marginTop: '5%' }}
           />
@@ -146,7 +157,7 @@ export default class CreateGoal extends React.Component {
             onCancel={this.hideEndDateTimePicker}
           />
 
-          <Button title="Submit" style={{ marginTop: '40%' }} onPress={this.makeGoal} />
+          <Button title="Submit" style={{ marginTop: '20%' }} onPress={this.makeGoal} />
         </View>
       </>
     );

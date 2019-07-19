@@ -93,9 +93,17 @@ export default class Dashboard extends React.Component {
    * @param {Object} goal
    * @memberof Dashboard
    */
-  handleChecked(goal) {
-    goal.completed = !goal.completed;
+  handleChecked(checkedGoal) {
+    checkedGoal.completed = !checkedGoal.completed;
     this.forceUpdate();
+
+    setTimeout(
+      function() {
+        this.state.userGoals = this.state.userGoals.filter((goal) => !goal.completed);
+        this.forceUpdate();
+      }.bind(this),
+      800
+    );
   }
 
   refreshList = () => {
@@ -119,7 +127,7 @@ export default class Dashboard extends React.Component {
   render() {
     return (
       <>
-        <View style={{ width: '90%', height: '100%', marginLeft: '7%' }}>
+        <View style={{ width: '90%', height: '100%', marginLeft: '5%' }}>
           <View zIndex={-1}>
             <FlatList
               onRefresh={this.refreshList}
