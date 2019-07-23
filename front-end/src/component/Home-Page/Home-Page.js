@@ -128,6 +128,7 @@ export default class HomePage extends React.Component {
                     <Image source={require('../../../assets/icon.png')} style={{ width: 200, height: 200 }} />
                     <Text style={styles.appName}>Mobivate</Text>
                   </View>
+
                   {/* Sign in 'button', using image to meet twitter standards */}
                   <TouchableOpacity style={styles.centerHorizontally} onPress={() => this.login()}>
                     <Image source={require('../../../assets/sign-in-with-twitter.png')} />
