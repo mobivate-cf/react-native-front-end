@@ -25,49 +25,32 @@ export default class CreateGoal extends React.Component {
     super(props);
     this.userId = props.navigation.getParam('user_id');
 
-    this.state = {};
-    this.state.goal_name;
-    this.state.isStartDateTimePickerVisible = false;
-    this.state.isEndDateTimePickerVisible = false;
-    this.state.startDate = Date.now();
-    this.state.endDate = Date.now() * 2;
-    this.state.frequency = 'daily';
+    this.state = {
+      goal_name: '',
+      isStartDateTimePickerVisible: false,
+      isEndDateTimePickerVisible: false,
+      startDate: Date.now(),
+      endDate: Date.now() * 2,
+      frequency: 'daily',
+    };
   }
 
   /**
-   *  Shows date picker for start date of goal
+   * Toggle display of start date picker
    *
    * @memberof CreateGoal
    */
-  showStartDateTimePicker = () => {
-    this.setState({ isStartDateTimePickerVisible: true });
+  toggleStartDateTimePickerDisplay = () => {
+    this.setState({ isStartDateTimePickerVisible: !this.state.isStartDateTimePickerVisible });
   };
 
   /**
-   *  Shows date picker for end date of goal
+   * Toggle display of end date picker
    *
    * @memberof CreateGoal
    */
-  showEndDateTimePicker = () => {
-    this.setState({ isEndDateTimePickerVisible: true });
-  };
-
-  /**
-   *  Hides date picker for start date of goal
-   *
-   * @memberof CreateGoal
-   */
-  hideStartDateTimePicker = () => {
-    this.setState({ isStartDateTimePickerVisible: false });
-  };
-
-  /**
-   *  Hides date picker for end date of goal
-   *
-   * @memberof CreateGoal
-   */
-  hideEndDateTimePicker = () => {
-    this.setState({ isEndDateTimePickerVisible: false });
+  toggleEndDateTimePickerDisplay = () => {
+    this.setState({ isEndDateTimePickerVisible: !this.state.isEndDateTimePickerVisible });
   };
 
   /**
@@ -77,7 +60,7 @@ export default class CreateGoal extends React.Component {
    */
   handleStartDatePicked = (date) => {
     this.setState({ startDate: date.getTime() });
-    this.hideStartDateTimePicker();
+    this.toggleStartDateTimePickerDisplay();
   };
 
   /**
@@ -87,9 +70,14 @@ export default class CreateGoal extends React.Component {
    */
   handleEndDatePicked = (date) => {
     this.setState({ endDate: date.getTime() });
-    this.hideEndDateTimePicker();
+    this.toggleEndDateTimePickerDisplay();
   };
 
+  /**
+   * Make post request to add goal to database and return to dashboard
+   *
+   * @memberof CreateGoal
+   */
   makeGoal = async () => {
     if (!this.state.goal_name) {
       return;
@@ -136,25 +124,25 @@ export default class CreateGoal extends React.Component {
 
           <Button
             title="Start Date"
-            onPress={this.showStartDateTimePicker}
+            onPress={this.toggleStartDateTimePickerDisplay}
             style={{ width: '90%', marginLeft: '5%', marginTop: '5%' }}
           />
           <DateTimePicker
             isVisible={this.state.isStartDateTimePickerVisible}
             onConfirm={this.handleStartDatePicked}
-            onCancel={this.hideStartDateTimePicker}
+            onCancel={this.toggleStartDateTimePickerDisplay}
           />
 
           <Button
             title="End Date"
             color="orange"
-            onPress={this.showEndDateTimePicker}
+            onPress={this.toggleEndDateTimePickerDisplay}
             style={{ width: '90%', marginLeft: '5%', marginTop: '5%' }}
           />
           <DateTimePicker
             isVisible={this.state.isEndDateTimePickerVisible}
             onConfirm={this.handleEndDatePicked}
-            onCancel={this.hideEndDateTimePicker}
+            onCancel={this.toggleEndDateTimePickerDisplay}
           />
 
           <Button title="Submit" style={{ marginTop: '20%' }} onPress={this.makeGoal} />
