@@ -1,9 +1,8 @@
 import { Linking } from 'expo';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { KeyboardAvoidingView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
 import { Image } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // ----------------------------------------------------------------------------
 
@@ -31,10 +30,7 @@ export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    // this.state.user = false;
-    this.state.user = 'dummyUser'; // false initial
-    this.state.display_name = 'dummyDisplay';
-    this.state.user_id = '27';
+    this.state.user = false;
 
     this.state.logout = this.logout;
   }
@@ -51,6 +47,7 @@ export default class HomePage extends React.Component {
         user: this.state.user,
         display_name: this.state.display_name,
         user_id: this.state.user_id,
+        logout: this.state.logout,
       });
     }
   }
@@ -71,6 +68,7 @@ export default class HomePage extends React.Component {
       display_name: data.queryParams.display_name,
       user_id: data.queryParams.id,
     });
+
     this.componentDidMount();
   };
 
@@ -130,6 +128,7 @@ export default class HomePage extends React.Component {
                     <Image source={require('../../../assets/icon.png')} style={{ width: 200, height: 200 }} />
                     <Text style={styles.appName}>Mobivate</Text>
                   </View>
+
                   {/* Sign in 'button', using image to meet twitter standards */}
                   <TouchableOpacity style={styles.centerHorizontally} onPress={() => this.login()}>
                     <Image source={require('../../../assets/sign-in-with-twitter.png')} />

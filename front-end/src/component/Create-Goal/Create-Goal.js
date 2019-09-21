@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button, Keyboard, View, Text, TextInput } from 'react-native';
-import { TouchableOpacity } from 'react-native-elements';
+import { TextInput, View } from 'react-native';
+import { Button } from 'react-native-elements';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-import styles from './styles';
+const FETCH_CREATE_GOAL_URL = 'https://mobby-backend.herokuapp.com/createGoal';
 
 /**
  *  React Component for add goal screen
@@ -24,27 +23,34 @@ export default class CreateGoal extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = {};
-    this.state.isStartDateTimePickerVisible = false;
+    this.userId = props.navigation.getParam('user_id');
+
+    this.state = {
+      goal_name: '',
+      isStartDateTimePickerVisible: false,
+      isEndDateTimePickerVisible: false,
+      startDate: Date.now(),
+      endDate: Date.now() * 2,
+      frequency: 'daily',
+    };
   }
 
   /**
-   *  Shows date picker for start date of goal
+   * Toggle display of start date picker
    *
    * @memberof CreateGoal
    */
-  showStartDateTimePicker = () => {
-    // alert('hello');
-    this.setState({ isStartDateTimePickerVisible: true });
+  toggleStartDateTimePickerDisplay = () => {
+    this.setState({ isStartDateTimePickerVisible: !this.state.isStartDateTimePickerVisible });
   };
 
   /**
-   *  Hides date picker for end date of goal
+   * Toggle display of end date picker
    *
    * @memberof CreateGoal
    */
-  hideStartDateTimePicker = () => {
-    this.setState({ isStartDateTimePickerVisible: false });
+  toggleEndDateTimePickerDisplay = () => {
+    this.setState({ isEndDateTimePickerVisible: !this.state.isEndDateTimePickerVisible });
   };
 
   /**
@@ -53,30 +59,93 @@ export default class CreateGoal extends React.Component {
    * @memberof CreateGoal
    */
   handleStartDatePicked = (date) => {
-    console.log('A date has been picked: ', date);
-    this.hideStartDateTimePicker();
+    this.setState({ startDate: date.getTime() });
+    this.toggleStartDateTimePickerDisplay();
+  };
+
+  /**
+   *  Sets date for end date of goal
+   *
+   * @memberof CreateGoal
+   */
+  handleEndDatePicked = (date) => {
+    this.setState({ endDate: date.getTime() });
+    this.toggleEndDateTimePickerDisplay();
+  };
+
+  /**
+   * Make post request to add goal to database and return to dashboard
+   *
+   * @memberof CreateGoal
+   */
+  makeGoal = async () => {
+    if (!this.state.goal_name) {
+      return;
+    }
+
+    await fetch(FETCH_CREATE_GOAL_URL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goal_user_id: this.userId,
+        goal_name: this.state.goal_name,
+        goal_start_date: this.state.startDate,
+        goal_end_date: this.state.endDate,
+        frequency: this.state.frequency,
+      }),
+    });
+
+    this.props.navigation.navigate('Dashboard');
   };
 
   render() {
     return (
       <>
-        <View>
+        <View
+          style={{
+            width: '90%',
+            height: '80%',
+            marginLeft: '5%',
+            marginTop: '40%',
+          }}
+        >
           <TextInput
-            placeholder="Name"
-            onChange={(event) => this.setState({ goal_name: event.text })}
-            maxLength={30}
-            onBlur={Keyboard.dismiss}
+            style={{
+              height: 40,
+              paddingLeft: 6,
+              fontSize: 25,
+            }}
+            onChangeText={(name) => this.setState({ goal_name: name })}
+            placeholder="Give your goal a name"
           />
-          <Button title="Show DatePicker" onPress={this.showStartDateTimePicker} />
+
+          <Button
+            title="Start Date"
+            onPress={this.toggleStartDateTimePickerDisplay}
+            style={{ width: '90%', marginLeft: '5%', marginTop: '5%' }}
+          />
           <DateTimePicker
             isVisible={this.state.isStartDateTimePickerVisible}
             onConfirm={this.handleStartDatePicked}
-            onCancel={this.hideStartDateTimePicker}
+            onCancel={this.toggleStartDateTimePickerDisplay}
           />
 
-          {/* <TextInput placeholder="End Date" onChange={(event) => this.setState({ goal_end: event.text })} />
+          <Button
+            title="End Date"
+            color="orange"
+            onPress={this.toggleEndDateTimePickerDisplay}
+            style={{ width: '90%', marginLeft: '5%', marginTop: '5%' }}
+          />
+          <DateTimePicker
+            isVisible={this.state.isEndDateTimePickerVisible}
+            onConfirm={this.handleEndDatePicked}
+            onCancel={this.toggleEndDateTimePickerDisplay}
+          />
 
-          <TextInput placeholder="Frequency" onChange={(event) => this.setState({ goal_frequency: event.text })} /> */}
+          <Button title="Submit" style={{ marginTop: '20%' }} onPress={this.makeGoal} />
         </View>
       </>
     );

@@ -1,11 +1,12 @@
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import { CheckBox, ListItem, TouchableScale } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
+import If from '../If/If';
 
+const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
+const FETCH_DELETE_GOAL_URL = 'https://mobby-backend.herokuapp.com/deleteGoal';
 /**
  * React Component for Homepage of app
  *
@@ -16,7 +17,10 @@ const FETCH_USER_GOALS_URL = 'https://mobby-backend.herokuapp.com/goals';
  * @extends {React.Component}
  */
 export default class Dashboard extends React.Component {
-  static navigationOptions = { headerTitle: 'Today', headerLeft: null, gesturesEnabled: false };
+  static navigationOptions = {
+    headerTitle: 'Today',
+    headerLeft: null,
+  };
 
   /**
    * Creates an instance of Dashboard.
@@ -32,11 +36,12 @@ export default class Dashboard extends React.Component {
     this.userId = props.navigation.getParam('user_id');
     this.userName = props.navigation.getParam('user');
     this.displayName = props.navigation.getParam('display_name');
+    this.isRefreshing = false;
 
     this.state.userGoals = [
       {
         key: 'add',
-        goal_name: 'loading...',
+        goal_name: 'Loading...',
         streak: 0,
       },
     ];
@@ -67,7 +72,7 @@ export default class Dashboard extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        goal_user_id: 1149045194530017300,
+        goal_user_id: this.userId,
       }),
     });
 
@@ -79,6 +84,17 @@ export default class Dashboard extends React.Component {
       this.state.userGoals[idx] = element;
       return element;
     });
+
+    if (goals.length === 0) {
+      this.state.userGoals = [
+        {
+          key: 'add',
+          goal_name: 'Add a goal!',
+          streak: 0,
+        },
+      ];
+    }
+
     this.forceUpdate();
   }
 
@@ -88,9 +104,43 @@ export default class Dashboard extends React.Component {
    * @param {Object} goal
    * @memberof Dashboard
    */
-  handleChecked(goal) {
-    goal.completed = !goal.completed;
-    this.forceUpdate();
+  handleChecked(checkedGoal) {
+    if (checkedGoal.key !== 'add') {
+      checkedGoal.completed = !checkedGoal.completed;
+      this.forceUpdate();
+
+      fetch(FETCH_DELETE_GOAL_URL, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          goal_id: checkedGoal.goal_id,
+          goal_user_id: this.props.navigation.getParam('user_id'),
+        }),
+      });
+
+      setTimeout(
+        function() {
+          this.state.userGoals = this.state.userGoals.filter((goal) => !goal.completed) || [];
+          this.forceUpdate();
+        }.bind(this),
+        800
+      );
+    }
+  }
+
+  refreshList = () => {
+    this.isRefreshing = true;
+    this.getUserGoals();
+    this.isRefreshing = false;
+  };
+
+  addGoal() {
+    this.props.navigation.navigate('CreateGoal', {
+      user_id: this.props.navigation.getParam('user_id'),
+    });
   }
 
   /**
@@ -102,9 +152,11 @@ export default class Dashboard extends React.Component {
   render() {
     return (
       <>
-        <View style={{ width: '90%', height: '100%', marginLeft: '7%' }}>
+        <View style={{ width: '90%', height: '100%', marginLeft: '5%' }}>
           <View zIndex={-1}>
             <FlatList
+              onRefresh={this.refreshList}
+              refreshing={this.isRefreshing}
               style={{ width: '100%', height: '100%' }}
               data={this.state.userGoals}
               renderItem={({ item }) => (
@@ -113,7 +165,7 @@ export default class Dashboard extends React.Component {
                   title={item.goal_name}
                   titleStyle={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}
                   subtitleStyle={{ color: 'black' }}
-                  subtitle={item.streak ? `Streak: ${item.streak}` : 'give it a sec'}
+                  // subtitle={item.streak ? `Streak: ${item.streak}` : 'waiting...'}
                   rightTitle={<CheckBox checked={item.completed} onPress={() => this.handleChecked(item)} />}
                 />
               )}
@@ -127,11 +179,7 @@ export default class Dashboard extends React.Component {
               bottom: 0,
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate('CreateGoal');
-              }}
-            >
+            <TouchableOpacity onPress={() => this.addGoal()}>
               <Icon
                 name="plus-circle"
                 size={75}
